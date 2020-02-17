@@ -1,0 +1,9 @@
+*.bat
+*.sh
+*.exe
+*.yaml
+*.json
+
+*.exe
+*.test
+*.prof
