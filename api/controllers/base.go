@@ -16,6 +16,10 @@ type Server struct {
 	router *mux.Router
 }
 
+func NewServer() *Server {
+	return &Server{}
+}
+
 func (server *Server) Initialize(DbUri string) {
 	var err error
 	server.db, err = sql.Open("mysql", DbUri)

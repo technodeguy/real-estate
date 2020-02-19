@@ -9,8 +9,6 @@ import (
 	"github.com/technodeguy/real-estate/api/controllers"
 )
 
-var server = controllers.Server{}
-
 func init() {
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Env file loading error")
@@ -20,6 +18,8 @@ func init() {
 }
 
 func Start() {
+	server := controllers.NewServer()
+
 	server.Initialize(os.Getenv("DB_URI"))
 
 	server.RunServer(os.Getenv("API_PORT"))
