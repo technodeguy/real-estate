@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"errors"
+	"log"
 	"net/http"
 
 	"github.com/technodeguy/real-estate/api/consts"
@@ -27,5 +28,15 @@ func (server *Server) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responses.Json(w, http.StatusCreated, userInput)
+	user := models.User{
+		Nickname:    userInput.Nickname,
+		Password:    userInput.Password,
+		PhoneNumber: userInput.PhoneNumber,
+	}
+
+	id, err := user.CreateUser(server.db)
+
+	log.Print("Error occured", err)
+
+	responses.Json(w, http.StatusCreated, map[string]uint32{"id": id})
 }

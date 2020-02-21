@@ -8,6 +8,7 @@ import (
 type User struct {
 	Id          int    `json:"id"`
 	Nickname    string `json:"nickname"`
+	Password    string `json:"password"`
 	PhoneNumber string `json:"phoneNumber"`
 	// Avatar      string `json:"avatar"`
 }
@@ -42,4 +43,14 @@ func (u *User) FindAllUsers(db *sql.DB) ([]User, error) {
 	}
 
 	return users, nil
+}
+
+func (u *User) CreateUser(db *sql.DB) (uint32, error) {
+
+	var lastUserId uint32
+
+	err := db.QueryRow("CALL create_user(?, ?, ?)", u.Nickname, u.Password, u.PhoneNumber).Scan(&lastUserId)
+
+	log.Print("BAD ERRO", err)
+	return lastUserId, nil
 }
