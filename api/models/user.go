@@ -51,6 +51,9 @@ func (u *User) CreateUser(db *sql.DB) (uint32, error) {
 
 	err := db.QueryRow("CALL create_user(?, ?, ?)", u.Nickname, u.Password, u.PhoneNumber).Scan(&lastUserId)
 
-	log.Print("BAD ERRO", err)
+	if err != nil {
+		return 0, err
+	}
+
 	return lastUserId, nil
 }

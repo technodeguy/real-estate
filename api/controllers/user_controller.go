@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"errors"
-	"log"
 	"net/http"
 
+	"github.com/go-sql-driver/mysql"
 	"github.com/technodeguy/real-estate/api/consts"
 	"github.com/technodeguy/real-estate/api/validators"
 
@@ -36,7 +36,15 @@ func (server *Server) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	id, err := user.CreateUser(server.db)
 
-	log.Print("Error occured", err)
+	if driverErr, ok := err.(*mysql.MySQLError); ok {
+		if driverErr.Number == 1062 { // ER_DUP_ENTRY
+			responses.Error(w, http.StatusUnprocessableEntity, errors.New(consts.USER_ALREADY_EXISTS))
+		} else {
+			responses.Error(w, http.StatusInternalServerError, errors.New(consts.INTERNAL))
+		}
+
+		return
+	}
 
 	responses.Json(w, http.StatusCreated, map[string]uint32{"id": id})
 }
