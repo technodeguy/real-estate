@@ -3,6 +3,8 @@ package models
 import (
 	"database/sql"
 	"log"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -11,6 +13,26 @@ type User struct {
 	Password    string `json:"password"`
 	PhoneNumber string `json:"phoneNumber"`
 	// Avatar      string `json:"avatar"`
+}
+
+func (u *User) hash(password string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
+
+	if err != nil {
+		return "", err
+	}
+
+	return string(hash), nil
+}
+
+func (u *User) verifyAndCompare(hashPassword, password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hashPassword), []byte(password))
+
+	if err != nil {
+		return false
+	}
+
+	return true
 }
 
 func (u *User) FindAllUsers(db *sql.DB) ([]User, error) {
@@ -47,9 +69,17 @@ func (u *User) FindAllUsers(db *sql.DB) ([]User, error) {
 
 func (u *User) CreateUser(db *sql.DB) (uint32, error) {
 
+	hashedPassword, err := u.hash(u.Password)
+
+	if err != nil {
+		return 0, err
+	}
+
+	u.Password = hashedPassword
+
 	var lastUserId uint32
 
-	err := db.QueryRow("CALL create_user(?, ?, ?)", u.Nickname, u.Password, u.PhoneNumber).Scan(&lastUserId)
+	err = db.QueryRow("CALL create_user(?, ?, ?)", u.Nickname, u.Password, u.PhoneNumber).Scan(&lastUserId)
 
 	if err != nil {
 		return 0, err
