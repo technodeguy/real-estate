@@ -11,9 +11,9 @@ import (
 
 func init() {
 	if err := godotenv.Load(); err != nil {
-		log.Fatal("Env file loading error")
+		log.Print("Running on staging env")
 	} else {
-		log.Print("Env variables successfully loaded")
+		log.Print("Running on dev env without docker")
 	}
 }
 
