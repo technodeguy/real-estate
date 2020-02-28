@@ -1,8 +1,29 @@
 package validators
 
 import (
+	"errors"
+	"strings"
+
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
+
+type CreateSignedUrlRequest struct {
+	Filename string `json:"filename"`
+}
+
+func (u CreateSignedUrlRequest) Validate() error {
+	var err error
+
+	err = validation.ValidateStruct(&u,
+		validation.Field(&u.Filename, validation.Required, validation.Length(1, 64)),
+	)
+
+	if !strings.Contains(u.Filename, ".") {
+		err = errors.New("")
+	}
+
+	return err
+}
 
 type CreateUserRequest struct {
 	Nickname    string `json:"nickname"`
