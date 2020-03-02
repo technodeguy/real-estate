@@ -60,11 +60,14 @@ func (server *Server) GetPresignedUrl(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	mimeType := utils.GetFileMimeType(userInput.Filename)
+	mt := utils.GetFileMimeType(userInput.Filename)
 
-	log.Println("GENERATED", mimeType, " and ", userInput.Filename)
+	if isAccepted := utils.IsAcceptedMimeType(server.cnf.FileStore.FileWhiteList, mt); !isAccepted {
+		responses.Error(w, http.StatusUnprocessableEntity, errors.New(consts.INVALID_FILE_FORMAT))
+		return
+	}
 
-	data, err := server.s3Service.GetPresignedUrl(mimeType, userInput.Filename)
+	data, err := server.s3Service.GetPresignedUrl(mt, userInput.Filename)
 
 	if err != nil {
 		log.Println("Error by creating presigned url", err)

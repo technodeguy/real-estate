@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
+	"strconv"
+
+	"github.com/technodeguy/real-estate/api/config"
 
 	"github.com/gorilla/mux"
 
@@ -15,18 +17,19 @@ import (
 )
 
 type Server struct {
+	cnf       *config.Config
 	db        *sql.DB
 	router    *mux.Router
 	s3Service services.S3ServiceInterface
 }
 
-func NewServer() *Server {
-	return &Server{}
+func NewServer(cnf *config.Config) *Server {
+	return &Server{cnf: cnf}
 }
 
-func (server *Server) Initialize(DbUri string) {
+func (server *Server) Initialize() {
 	var err error
-	server.db, err = sql.Open("mysql", DbUri)
+	server.db, err = sql.Open("mysql", server.cnf.Db.Uri)
 
 	if err != nil {
 		log.Fatalf("Unable to connect to db %v", err.Error())
@@ -42,10 +45,12 @@ func (server *Server) Initialize(DbUri string) {
 
 	server.initializeRoutes()
 
+	awsS3Config := server.cnf.Aws
+
 	awsS3Service := services.NewAwsS3Service(
-		os.Getenv("AWS_ACCESS_KEY_ID"),
-		os.Getenv("AWS_SECRET_ACCESS_KEY"),
-		os.Getenv("AWS_BUCKET_NAME"),
+		awsS3Config.AccessKeyId,
+		awsS3Config.SecretAccesKey,
+		awsS3Config.BucketName,
 	)
 
 	awsS3Service.Initialize()
@@ -55,7 +60,11 @@ func (server *Server) Initialize(DbUri string) {
 	log.Println("Services initialized successfully")
 }
 
-func (server *Server) RunServer(port string) {
-	fmt.Println(fmt.Sprintf("Listening on port %s", port))
+func (server *Server) RunServer() {
+	host := server.cnf.Server.Host
+	port := strconv.Itoa(server.cnf.Server.Port)
+	appUrl := host + ":" + port
+
+	fmt.Println(fmt.Sprintf("Listening on %v", appUrl))
 	log.Fatal(http.ListenAndServe(":"+port, server.router))
 }

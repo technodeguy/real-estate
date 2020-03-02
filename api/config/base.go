@@ -3,12 +3,14 @@ package config
 import (
 	"strings"
 
+	"github.com/technodeguy/real-estate/api/consts"
+
 	"github.com/spf13/viper"
 )
 
 type ServerConfig struct {
 	Host string
-	Port int16
+	Port int
 }
 
 type DbConfig struct {
@@ -32,12 +34,12 @@ type Config struct {
 	FileStore FileStoreConfig
 }
 
-func ReadConfig(filename string) (*Config, error) {
+func LoadConfig(filename string) (*Config, error) {
 
 	v := viper.New()
 
 	v.SetConfigName(filename)
-	v.AddConfigPath("./api/config")
+	v.AddConfigPath(consts.CONFIG_DIR)
 	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	v.AutomaticEnv()
 

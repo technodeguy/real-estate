@@ -2,14 +2,13 @@ package api
 
 import (
 	"log"
-	"os"
 
 	"github.com/technodeguy/real-estate/api/config"
 	"github.com/technodeguy/real-estate/api/controllers"
 )
 
 func Start() {
-	cnf, err := config.ReadConfig("config")
+	cnf, err := config.LoadConfig("config")
 
 	if err != nil {
 		log.Fatalf("Unable to initialize config %s", err)
@@ -17,9 +16,9 @@ func Start() {
 
 	log.Printf("CONFIG %#v", *cnf)
 
-	server := controllers.NewServer()
+	server := controllers.NewServer(cnf)
 
-	server.Initialize(os.Getenv("DB_URI"))
+	server.Initialize()
 
-	server.RunServer(os.Getenv("API_PORT"))
+	server.RunServer()
 }
