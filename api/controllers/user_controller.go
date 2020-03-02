@@ -62,7 +62,7 @@ func (server *Server) GetPresignedUrl(w http.ResponseWriter, r *http.Request) {
 
 	mt := utils.GetFileMimeType(userInput.Filename)
 
-	if isAccepted := utils.IsAcceptedMimeType(server.cnf.FileStore.FileWhiteList, mt); !isAccepted {
+	if isAccepted := server.cnf.FileStore.FileWhiteList.IsAcceptedMimeType(mt); !isAccepted {
 		responses.Error(w, http.StatusUnprocessableEntity, errors.New(consts.INVALID_FILE_FORMAT))
 		return
 	}
@@ -73,7 +73,6 @@ func (server *Server) GetPresignedUrl(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error by creating presigned url", err)
 
 		responses.Error(w, http.StatusUnprocessableEntity, errors.New(consts.GET_PRESIGNED_URL_ERROR))
-
 		return
 	}
 

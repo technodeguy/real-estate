@@ -8,6 +8,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+type FileWhiteListType []string
+
 type ServerConfig struct {
 	Host string
 	Port int
@@ -24,7 +26,7 @@ type AwsConfig struct {
 }
 
 type FileStoreConfig struct {
-	FileWhiteList []string
+	FileWhiteList FileWhiteListType
 }
 
 type Config struct {
