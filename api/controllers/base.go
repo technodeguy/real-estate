@@ -17,7 +17,7 @@ import (
 type Server struct {
 	db        *sql.DB
 	router    *mux.Router
-	s3Service *services.AwsS3Service
+	s3Service services.S3ServiceInterface
 }
 
 func NewServer() *Server {

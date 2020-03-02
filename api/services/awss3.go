@@ -17,6 +17,11 @@ type AwsS3Service struct {
 	s3              *s3.S3
 }
 
+type S3ServiceInterface interface {
+	Initialize()
+	GetPresignedUrl(mimeType, filename string) (map[string]string, error)
+}
+
 func NewAwsS3Service(accessKeyId, secretAccessKey, bucketName string) *AwsS3Service {
 	return &AwsS3Service{accessKeyId, secretAccessKey, bucketName, nil}
 }
