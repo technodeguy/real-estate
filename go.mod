@@ -7,6 +7,7 @@ require (
 	github.com/fatih/color v1.9.0 // indirect
 	github.com/githubnemo/CompileDaemon v1.0.0 // indirect
 	github.com/go-ozzo/ozzo-validation/v4 v4.1.0
+	github.com/go-redis/redis v6.15.7+incompatible
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/gorilla/mux v1.7.4
 	github.com/howeyc/fsnotify v0.9.0 // indirect

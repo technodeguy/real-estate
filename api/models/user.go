@@ -87,3 +87,7 @@ func (u *User) CreateUser(db *sql.DB) (uint32, error) {
 
 	return lastUserId, nil
 }
+
+func (u *User) SaveUserAvatar(db *sql.DB, id int, avatar string) {
+	db.QueryRow("UPDATE user SET avatar = ?, update_dt = NOW() WHERE id = ?", avatar, id)
+}

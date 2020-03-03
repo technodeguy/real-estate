@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/go-redis/redis"
 	"github.com/technodeguy/real-estate/api/config"
 
 	"github.com/gorilla/mux"
@@ -17,10 +18,11 @@ import (
 )
 
 type Server struct {
-	cnf       *config.Config
-	db        *sql.DB
-	router    *mux.Router
-	s3Service services.S3ServiceInterface
+	cnf         *config.Config
+	db          *sql.DB
+	redisClient *redis.Client
+	router      *mux.Router
+	s3Service   services.S3ServiceInterface
 }
 
 func NewServer(cnf *config.Config) *Server {
@@ -40,6 +42,21 @@ func (server *Server) Initialize() {
 	}
 
 	log.Println("DB connected successfully")
+
+	rc := redis.NewClient(&redis.Options{
+		Addr: server.cnf.Redis.Uri,
+		DB:   0,
+	})
+
+	_, err = rc.Ping().Result()
+
+	if err != nil {
+		log.Fatalf("Unable to connect to redis %v", err.Error())
+	}
+
+	server.redisClient = rc
+
+	log.Println("Redis connected successfully")
 
 	server.router = mux.NewRouter()
 

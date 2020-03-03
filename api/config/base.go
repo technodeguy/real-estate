@@ -19,6 +19,10 @@ type DbConfig struct {
 	Uri string
 }
 
+type RedisConfig struct {
+	Uri string
+}
+
 type AwsConfig struct {
 	BucketName     string `mapstructure:"bucket_name"`
 	AccessKeyId    string `mapstructure:"access_key_id"`
@@ -32,6 +36,7 @@ type FileStoreConfig struct {
 type Config struct {
 	Server    ServerConfig
 	Db        DbConfig
+	Redis     RedisConfig
 	Aws       AwsConfig
 	FileStore FileStoreConfig
 }

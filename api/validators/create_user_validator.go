@@ -38,3 +38,15 @@ func (u CreateUserRequest) Validate() error {
 		validation.Field(&u.PhoneNumber, validation.Required, validation.Length(10, 15)),
 	)
 }
+
+type SaveUserAvatar struct {
+	Id     int    `json:"id"`
+	Avatar string `json:"avatar"`
+}
+
+func (u SaveUserAvatar) Validate() error {
+	return validation.ValidateStruct(&u,
+		validation.Field(&u.Id, validation.Required),
+		validation.Field(&u.Avatar, validation.Required, validation.Length(6, 255)),
+	)
+}

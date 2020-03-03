@@ -9,6 +9,7 @@ services:
       - db
     networks:
       - db-tier
+      - cache-tier
 
   db:
     build: ./db
@@ -17,9 +18,17 @@ services:
     restart: always
     networks:
       - db-tier
-  
-volumes:
-  db-data:
+      - cache-tier
+
+  redis:
+    image: redis:alpine
+    hostname: redis
+    container_name: redis
+    command: ["redis-server", "--appendonly", "yes"]
+    ports: ["6379"]
+    networks:
+      - cache-tier
 
 networks:
   db-tier:
+  cache-tier:

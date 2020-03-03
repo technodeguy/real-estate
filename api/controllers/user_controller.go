@@ -79,6 +79,17 @@ func (server *Server) GetPresignedUrl(w http.ResponseWriter, r *http.Request) {
 	responses.Json(w, http.StatusCreated, data)
 }
 
-// func (server *Server) SaveUserAvatar(w http.ResponseWriter, r *http.Request) {
+func (server *Server) SaveUserAvatar(w http.ResponseWriter, r *http.Request) {
+	userInput := &validators.SaveUserAvatar{}
 
-// }
+	if err := validators.DecodeAndValidate(r, userInput); err != nil {
+		responses.Error(w, http.StatusBadRequest, errors.New(consts.BAD_REQUEST))
+		return
+	}
+
+	user := &models.User{}
+
+	user.SaveUserAvatar(server.db, userInput.Id, userInput.Avatar)
+
+	responses.Json(w, http.StatusNoContent, nil)
+}

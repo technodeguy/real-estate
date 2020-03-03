@@ -8,6 +8,7 @@ services:
     environment:
       - APP_NUM_CPU_CORES=8
       - DB_URI=root:root@tcp(db:3306)/real_estate
+      - REDIS_URI=redis:6379
       - SERVER_HOST=0.0.0.0
       - SERVER_PORT=3001
     volumes:
@@ -21,6 +22,11 @@ services:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
     volumes:
       - db-data:/var/lib/mysql
+
+  redis:
+    volumes:
+      - cache-data:/data
     
 volumes:
   db-data:
+  cache-data:
