@@ -14,6 +14,10 @@ import (
 	"github.com/technodeguy/real-estate/api/utils"
 )
 
+// func (server *Server) SignIn(nickname, password string) {
+
+// }
+
 func (server *Server) GetUsers(w http.ResponseWriter, r *http.Request) {
 	user := models.User{}
 
@@ -92,4 +96,30 @@ func (server *Server) SaveUserAvatar(w http.ResponseWriter, r *http.Request) {
 	user.SaveUserAvatar(server.db, userInput.Id, userInput.Avatar)
 
 	responses.Json(w, http.StatusNoContent, nil)
+}
+
+func (server *Server) Login(w http.ResponseWriter, r *http.Request) {
+	userInput := &validators.LoginRequest{}
+
+	if err := validators.DecodeAndValidate(r, userInput); err != nil {
+		responses.Error(w, http.StatusBadRequest, errors.New(consts.BAD_REQUEST))
+		return
+	}
+
+	userModel := &models.User{}
+
+	user, err := userModel.FindUserByNickname(server.db, userInput.Nickname)
+
+	if err != nil {
+		log.Print("Strange err", err.Error())
+		return
+	}
+
+	isValid := userModel.VerifyAndCompare(user.Password, userInput.Password)
+
+	if !isValid {
+		responses.Error(w, http.StatusUnprocessableEntity, errors.New(consts.INVALID_CREDS))
+		return
+	}
+
 }

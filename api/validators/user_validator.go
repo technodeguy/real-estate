@@ -50,3 +50,15 @@ func (u SaveUserAvatar) Validate() error {
 		validation.Field(&u.Avatar, validation.Required, validation.Length(6, 255)),
 	)
 }
+
+type LoginRequest struct {
+	Nickname string `json:"nickname"`
+	Password string `json:"password"`
+}
+
+func (u LoginRequest) Validate() error {
+	return validation.ValidateStruct(&u,
+		validation.Field(&u.Nickname, validation.Required),
+		validation.Field(&u.Password, validation.Required),
+	)
+}

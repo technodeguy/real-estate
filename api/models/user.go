@@ -25,10 +25,10 @@ func (u *User) hash(password string) (string, error) {
 	return string(hash), nil
 }
 
-func (u *User) verifyAndCompare(hashPassword, password string) bool {
+func (u *User) VerifyAndCompare(hashPassword, password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hashPassword), []byte(password))
 
-	if err != nil {
+	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
 		return false
 	}
 
@@ -90,4 +90,15 @@ func (u *User) CreateUser(db *sql.DB) (uint32, error) {
 
 func (u *User) SaveUserAvatar(db *sql.DB, id int, avatar string) {
 	db.QueryRow("UPDATE user SET avatar = ?, update_dt = NOW() WHERE id = ?", avatar, id)
+}
+
+func (u *User) FindUserByNickname(db *sql.DB, nickname string) (*User, error) {
+
+	err := db.QueryRow("SELECT id, password FROM user WHERE nickname = ?", nickname).Scan(&u.Id, &u.Nickname)
+
+	if err != nil {
+		return &User{}, err
+	}
+
+	return u, nil
 }
