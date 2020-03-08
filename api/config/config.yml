@@ -1,8 +1,13 @@
-node_env: dev
+app:
+  go_env: dev
 
 server:
   host: 127.0.0.1
   port: 3001
+
+jwt:
+  access_token:
+    secret: super_secret 
 
 db:
   uri: "root:123@tcp(127.0.0.1:3306)/real_estate"

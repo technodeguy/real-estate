@@ -110,8 +110,9 @@ func (server *Server) Login(w http.ResponseWriter, r *http.Request) {
 
 	user, err := userModel.FindUserByNickname(server.db, userInput.Nickname)
 
+	// TODO proper error check
 	if err != nil {
-		log.Print("Strange err", err.Error())
+		responses.Error(w, http.StatusNotFound, errors.New(consts.USER_NOT_FOUND))
 		return
 	}
 
@@ -122,4 +123,5 @@ func (server *Server) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	return
 }

@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/aws/aws-sdk-go v1.29.12
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fatih/color v1.9.0 // indirect
 	github.com/githubnemo/CompileDaemon v1.0.0 // indirect
 	github.com/go-ozzo/ozzo-validation/v4 v4.1.0

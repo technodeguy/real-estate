@@ -19,6 +19,7 @@ func (u *User) hash(password string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
 
 	if err != nil {
+		log.Print("Error while unhashing", err)
 		return "", err
 	}
 
@@ -28,7 +29,8 @@ func (u *User) hash(password string) (string, error) {
 func (u *User) VerifyAndCompare(hashPassword, password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hashPassword), []byte(password))
 
-	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
+	if err != nil {
+		log.Print("Err while unshasgjr", err)
 		return false
 	}
 
@@ -94,7 +96,7 @@ func (u *User) SaveUserAvatar(db *sql.DB, id int, avatar string) {
 
 func (u *User) FindUserByNickname(db *sql.DB, nickname string) (*User, error) {
 
-	err := db.QueryRow("SELECT id, password FROM user WHERE nickname = ?", nickname).Scan(&u.Id, &u.Nickname)
+	err := db.QueryRow("SELECT id, password FROM user WHERE nickname = ?", nickname).Scan(&u.Id, &u.Password)
 
 	if err != nil {
 		return &User{}, err

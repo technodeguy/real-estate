@@ -10,9 +10,19 @@ import (
 
 type FileWhiteListType []string
 
+type AppConfig struct {
+	GoEnv string `mapstructure:"go_env"`
+}
+
 type ServerConfig struct {
 	Host string
 	Port int
+}
+
+type JwtConfig struct {
+	AccessToken struct {
+		Secret string
+	} `mapstructure:"access_token"`
 }
 
 type DbConfig struct {
@@ -34,7 +44,9 @@ type FileStoreConfig struct {
 }
 
 type Config struct {
+	App       AppConfig
 	Server    ServerConfig
+	Jwt       JwtConfig
 	Db        DbConfig
 	Redis     RedisConfig
 	Aws       AwsConfig
