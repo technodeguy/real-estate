@@ -1,6 +1,7 @@
 package services
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -13,28 +14,46 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-type TokenService struct {
+type tokenService struct {
 	jwtConfig   *config.JwtConfig
 	redisClient *redis.Client
 }
 
-func (ts *TokenService) Save(hmName string, id string, token string) error {
+type ITokenService interface {
+	Get(hmName string, id string) (interface{}, error)
+	CreateAndSave(userId int, jwtType string) (string, error)
+}
+
+func NewTokenService(jwtConfig *config.JwtConfig, redisClient *redis.Client) *tokenService {
+	return &tokenService{jwtConfig, redisClient}
+}
+
+func (ts *tokenService) save(hmName string, id string, token string) error {
 	return ts.redisClient.HMSet(hmName, map[string]interface{}{id: token}).Err()
 }
 
-func (ts *TokenService) Get(hmName string, id string) (interface{}, error) {
+func (ts *tokenService) Get(hmName string, id string) (interface{}, error) {
 	return ts.redisClient.HMGet(hmName, id).Result()
 }
 
-func (ts *TokenService) createAndSave(userId int) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &Claims{
+func (ts *tokenService) CreateAndSave(userId int, jwtType string) (string, error) {
+	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, &Claims{
 		Id: userId,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(5 * time.Minute).Unix(),
+			// TODO sync with config
+			ExpiresAt: time.Now().Add(ts.jwtConfig.AccessToken.Exp * time.Hour).Unix(),
 		},
-	})
+	}).SignedString([]byte(ts.jwtConfig.AccessToken.Secret))
 
-	token.SignedString([]byte(ts.jwtConfig.AccessToken.Secret))
+	if err != nil {
+		return "", err
+	}
 
-	return "", nil
+	err = ts.save(jwtType, strconv.Itoa(userId), token)
+
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }

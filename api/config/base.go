@@ -2,6 +2,7 @@ package config
 
 import (
 	"strings"
+	"time"
 
 	"github.com/technodeguy/real-estate/api/consts"
 
@@ -22,6 +23,7 @@ type ServerConfig struct {
 type JwtConfig struct {
 	AccessToken struct {
 		Secret string
+		Exp    time.Duration
 	} `mapstructure:"access_token"`
 }
 

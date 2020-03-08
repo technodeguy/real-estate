@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
-func (server *Server) Home(w http.ResponseWriter, request *http.Request) {
-	fmt.Fprint(w, "Hello world")
+func (server *Server) HealthCheck(w http.ResponseWriter, request *http.Request) {
+	w.WriteHeader(200)
+	fmt.Fprint(w, map[string]string{"established": "true"})
 }

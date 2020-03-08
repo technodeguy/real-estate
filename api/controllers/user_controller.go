@@ -123,5 +123,12 @@ func (server *Server) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	return
+	token, err := server.tokenService.CreateAndSave(user.Id, "AccessToken")
+
+	if err != nil {
+		responses.Error(w, http.StatusInternalServerError, errors.New(consts.INTERNAL))
+		return
+	}
+
+	responses.Json(w, http.StatusOK, map[string]string{"accessToken": token})
 }

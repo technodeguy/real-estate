@@ -6,7 +6,7 @@ import (
 
 func (s *Server) initializeRoutes() {
 	// Home route
-	s.router.HandleFunc("/", middlewares.SetMiddlewareJSON(s.Home)).Methods("GET")
+	s.router.HandleFunc("/", middlewares.SetMiddlewareJSON(s.HealthCheck)).Methods("GET")
 
 	//User routes
 	s.router.HandleFunc("/users", middlewares.SetMiddlewareJSON(s.CreateUser)).Methods("POST")

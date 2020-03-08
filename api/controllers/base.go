@@ -18,11 +18,12 @@ import (
 )
 
 type Server struct {
-	cnf         *config.Config
-	db          *sql.DB
-	redisClient *redis.Client
-	router      *mux.Router
-	s3Service   services.S3ServiceInterface
+	cnf          *config.Config
+	db           *sql.DB
+	redisClient  *redis.Client
+	router       *mux.Router
+	tokenService services.ITokenService
+	s3Service    services.S3ServiceInterface
 }
 
 func NewServer(cnf *config.Config) *Server {
@@ -73,6 +74,8 @@ func (server *Server) Initialize() {
 	awsS3Service.Initialize()
 
 	server.s3Service = awsS3Service
+
+	server.tokenService = services.NewTokenService(&server.cnf.Jwt, server.redisClient)
 
 	log.Println("Services initialized successfully")
 }
