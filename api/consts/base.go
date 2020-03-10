@@ -1,6 +1,7 @@
 package consts
 
 const (
+	UNAUTHORIZED            = "UNAUTHORIZED"
 	INVALID_CREDS           = "INVALID_CREDS"
 	INVALID_FILE_FORMAT     = "INVALID_FILE_FORMAT"
 	USER_NOT_FOUND          = "USER_NOT_FOUND"

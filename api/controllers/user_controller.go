@@ -84,6 +84,10 @@ func (server *Server) GetPresignedUrl(w http.ResponseWriter, r *http.Request) {
 }
 
 func (server *Server) SaveUserAvatar(w http.ResponseWriter, r *http.Request) {
+	id := utils.ExtractIdFromHeaders(r)
+
+	log.Print("ID:", id)
+
 	userInput := &validators.SaveUserAvatar{}
 
 	if err := validators.DecodeAndValidate(r, userInput); err != nil {

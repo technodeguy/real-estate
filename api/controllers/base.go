@@ -61,8 +61,6 @@ func (server *Server) Initialize() {
 
 	server.router = mux.NewRouter()
 
-	server.initializeRoutes()
-
 	awsS3Config := server.cnf.Aws
 
 	awsS3Service := services.NewAwsS3Service(
@@ -78,6 +76,8 @@ func (server *Server) Initialize() {
 	server.tokenService = services.NewTokenService(&server.cnf.Jwt, server.redisClient)
 
 	log.Println("Services initialized successfully")
+
+	server.initializeRoutes()
 }
 
 func (server *Server) RunServer() {
