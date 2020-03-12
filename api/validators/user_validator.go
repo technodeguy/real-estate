@@ -40,13 +40,11 @@ func (u CreateUserRequest) Validate() error {
 }
 
 type SaveUserAvatar struct {
-	Id     int    `json:"id"`
 	Avatar string `json:"avatar"`
 }
 
 func (u SaveUserAvatar) Validate() error {
 	return validation.ValidateStruct(&u,
-		validation.Field(&u.Id, validation.Required),
 		validation.Field(&u.Avatar, validation.Required, validation.Length(6, 255)),
 	)
 }
