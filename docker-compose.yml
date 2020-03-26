@@ -3,15 +3,14 @@ services:
 
   gateway:
     build: ./gateway
+    container_name: gateway
     ports:
       - 80:80
     restart: on-failure
     depends_on:
       - api
-      - db
-      - redis
     networks:
-      - db-tier
+      - gateway-tier
   
   api: 
     build: .
@@ -21,7 +20,7 @@ services:
     depends_on:
       - db
     networks:
-      - db-tier
+      - gateway-tier
       - cache-tier
 
   db:
@@ -45,3 +44,4 @@ services:
 networks:
   db-tier:
   cache-tier:
+  gateway-tier:
