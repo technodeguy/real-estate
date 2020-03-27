@@ -52,12 +52,12 @@ func (server *Server) Initialize() {
 	_, err = rc.Ping().Result()
 
 	if err != nil {
-		log.Fatalf("Unable to connect to redis %v", err.Error())
+		// log.Fatalf("Unable to connect to redis %v", err.Error())
 	}
 
-	server.redisClient = rc
+	// server.redisClient = rc
 
-	log.Println("Redis connected successfully")
+	// log.Println("Redis connected successfully")
 
 	server.router = mux.NewRouter()
 
