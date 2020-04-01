@@ -2,9 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api-deployment
-  # labels:
-  #   app: api
-    # env: dev
+  labels:
+    app: api
+    env: dev
 spec:
   replicas: 1
   selector:
@@ -16,8 +16,9 @@ spec:
         app: api
     spec:
       containers:
-      - name: my-app
-        image: yura2033/real_estate:1.0.0
+      - image: yura2033/real_estate:1.0.0
+        name: api
+        command: ["go", "run", "main.go"]
         ports:
         - containerPort: 3001
         env:
@@ -29,5 +30,4 @@ spec:
             value: 0.0.0.0
           - name: SERVER_PORT
             value: "3001"
-        imagePullPolicy: Always
-        command: ["go", "run", "main.go"]
+        imagePullPolicy: IfNotPresent

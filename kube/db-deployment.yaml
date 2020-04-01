@@ -3,32 +3,38 @@ kind: Deployment
 metadata:
   name: db-deployment
   labels:
-    tier: db
+    app: db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      tier: db
+      app: db
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        tier: db
+        app: db
     spec:
       containers:
       - image: mysql:5.6
         name: db
+        ports:
+        - containerPort: 3306
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: root
-        ports:
-        - containerPort: 3306
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         volumeMounts:
-        - name: mysql-data
+        - name: db-storage
           mountPath: /var/lib/mysql
+        - name: initdb-storage
+          mountPath: /docker-entrypoint-initdb.d/setup.sql
       volumes:
-      - name: mysql-data
+      - name: db-storage
         persistentVolumeClaim:
-          claimName: mysql-pv-claim
+          claimName: db-pvc
+      - name: initdb-storage
+        hostPath:
+          path: /home/yura/Desktop/dev/golang/src/github.com/technodeguy/real_estate/db/setup.sql
+          type: File
