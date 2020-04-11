@@ -11,9 +11,8 @@ spec:
   accessModes:
     - ReadOnlyMany
   hostPath:
-    path: /home/yura/Desktop/dev/mcservices/test_nodejs/kube_volumes
+    path: /mnt/data/mysql
     type: Directory
-    # /var/lib/docker/volumes/test_kube
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config
+  labels:
+    app: api
+data:
+  serverHost: 0.0.0.0
+  dbUri: root:root@tcp(db-gateway:3306)/real_estate
+  redisUri: redis-gateway:6379

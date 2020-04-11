@@ -24,17 +24,17 @@ spec:
         env:
           - name: DB_URI
             valueFrom: 
-              secretKeyRef:
-                name: api-secret
+              configMapKeyRef:
+                name: api-config
                 key: dbUri
           - name: REDIS_URI
             valueFrom: 
-              secretKeyRef:
-                name: api-secret
+              configMapKeyRef:
+                name: api-config
                 key: redisUri
           - name: SERVER_HOST
             valueFrom: 
-              secretKeyRef:
-                name: api-secret
+              configMapKeyRef:
+                name: api-config
                 key: serverHost
         imagePullPolicy: IfNotPresent

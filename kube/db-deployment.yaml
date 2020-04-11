@@ -39,5 +39,5 @@ spec:
           claimName: db-pvc
       - name: initdb-storage
         hostPath:
-          path: /home/yura/Desktop/dev/golang/src/github.com/technodeguy/real_estate/db/setup.sql
+          path: /mnt/data/mysql/setup.sql
           type: File
