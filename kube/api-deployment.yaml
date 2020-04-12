@@ -16,7 +16,7 @@ spec:
         app: api
     spec:
       containers:
-      - image: yura2033/real_estate:1.0.0
+      - image: yura2033/real_estate:1.0.1
         name: api
         command: ["go", "run", "main.go"]
         ports:
@@ -37,4 +37,15 @@ spec:
               configMapKeyRef:
                 name: api-config
                 key: serverHost
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3001
+          initialDelaySeconds: 65
+          periodSeconds: 5
+        readinessProbe:
+          tcpSocket:
+            port: 3001
+          initialDelaySeconds:  60
+          periodSeconds: 2
         imagePullPolicy: IfNotPresent
