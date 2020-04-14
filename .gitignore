@@ -1,7 +1,6 @@
 *.bat
 *.sh
 *.exe
-*.yaml
 *.json
 
 *.exe
