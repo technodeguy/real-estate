@@ -15,7 +15,8 @@ func (s *Server) initializeRoutes() {
 	s.router.HandleFunc("/users/login", middlewares.SetMiddlewareJSON(s.Login)).Methods("POST")
 
 	// Estate routes
+	s.router.HandleFunc("/estates/cities/{city_id}", middlewares.SetMiddlewareJSON(s.GetEstatesByCityId)).Methods("GET")
 	s.router.HandleFunc("/estates", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuth(s.tokenService, s.CreateEstate))).Methods("POST")
-	// s.router.HandleFunc("/users/login", middlewares.SetMiddlewareJSON(s.Login)).Methods("POST")
+	s.router.HandleFunc("/estates/sell", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuth(s.tokenService, s.SellEstate))).Methods("PUT")
 
 }
